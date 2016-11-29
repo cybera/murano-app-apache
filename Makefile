@@ -1,8 +1,8 @@
 all: zip upload
 
 zip:
-	rm ca.cybera.MySQL.zip || true
-	zip -r ca.cybera.MySQL.zip *
+	rm ca.cybera.Apache.zip || true
+	zip -r ca.cybera.Apache.zip *
 
 upload:
-	murano package-import --exists-action u ca.cybera.MySQL.zip
+	murano package-import --exists-action u ca.cybera.Apache.zip

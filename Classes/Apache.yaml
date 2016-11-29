@@ -1,0 +1,84 @@
+Namespaces:
+  =: ca.cybera
+  conf: io.murano.configuration
+  res: io.murano.resources
+  std: io.murano
+  sys: io.murano.system
+
+Name: Apache
+Extends: std:Application
+
+Properties:
+  instance:
+    Contract: $.class(res:Instance).notNull()
+  volSize:
+    Contract: $.string().notNull()
+
+Methods:
+  .init:
+    Body:
+      - $._environment: $.find(std:Environment).require()
+
+  deploy:
+    Body:
+      - If: not $.getAttr(deployed, false)
+        Then:
+          # Create Security Group
+          - $._environment.reporter.report($this, 'Creating security group for Apache')
+          - $securityGroupIngress:
+            - ToPort: 80
+              FromPort: 80
+              IpProtocol: tcp
+              External: true
+            - ToPort: 443
+              FromPort: 443
+              IpProtocol: tcp
+              External: true
+          - $._environment.securityGroupManager.addGroupIngress($securityGroupIngress)
+
+          # Launch the instance
+          - $._environment.reporter.report($this, 'Creating instance for Apache')
+          - $.instance.deploy()
+
+          # Create volume
+          - $._environment.reporter.report($this, 'Creating a new volume')
+          - $stack: $._environment.stack
+          - $instanceName: $.instance.name
+          - $volumeName: ('vol_'+$instanceName)
+          - $template:
+              resources:
+                $volumeName:
+                   type: 'OS::Cinder::Volume'
+                   properties:
+                     size: $.volSize
+          - $._environment.stack.updateTemplate($template)
+          - $._environment.stack.push()
+
+          # Attach the volume to the instance
+          - $._environment.reporter.report($this, 'Attaching the volume to the instance')
+          - $stack: $._environment.stack
+          - $volume_attachment: ('vol_attachment'+$volumeName)
+          - $template:
+              resources:
+                $volume_attachment:
+                   type: 'OS::Cinder::VolumeAttachment'
+                   properties:
+                     volume_id: { get_resource: $volumeName}
+                     instance_uuid: { get_resource: $instanceName}
+          - $._environment.stack.updateTemplate($template)
+          - $._environment.stack.push()
+
+          # Deploy Apache
+          - $._environment.reporter.report($this, 'Deploying Apache')
+          - $file: sys:Resources.string('deployApache.sh').replace($replacements)
+          - conf:Linux.runCommand($.instance.agent, $file)
+          - $._environment.reporter.report($this, 'Apache is installed.')
+          # Assign Floating IP
+          - If: $.instance.assignFloatingIp
+            Then:
+              - $host: $.instance.floatingIpAddress
+            Else:
+              - $host: $.instance.ipAddresses.first()
+          - $._environment.reporter.report($this, format('Apache is          available at http://{0}', $host))
+
+          - $.setAttr(deployed, true)

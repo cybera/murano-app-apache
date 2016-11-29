@@ -2,13 +2,7 @@ Version: 2
 
 Application:
   ?:
-    type: ca.cybera.MySQL
-  dbRootPassword: $.dbConfiguration.password
-  connectionIP: $.instanceConfiguration.connectionIP
-  doBackups: $.backupConfiguration.doBackups
-  openstackTenant: $.backupConfiguration.tenant
-  openstackUser: $.backupConfiguration.userID
-  openstackPassword: $.backupConfiguration.password
+    type: ca.cybera.Apache
   volSize: $.instanceConfiguration.volSize
   instance:
     ?:
@@ -17,23 +11,9 @@ Application:
     flavor: $.instanceConfiguration.flavor
     image: $.instanceConfiguration.osImage
     keyname: $.instanceConfiguration.keyPair
+    assignFloatingIp: $.instanceConfiguration.assignFloatingIP
 
 Forms:
-  - dbConfiguration:
-      fields:
-        - name: title
-          type: string
-          required: false
-          hidden: true
-          descriptionTitle: Database Configuration
-          description: Specify the MySQL database properties
-        - name: password
-          type: password
-          label: MySQL Root Password
-          descriptionTitle: Password
-          description: >-
-            Please provide the root MySQL password.
-
   - instanceConfiguration:
       fields:
         - name: title
@@ -58,14 +38,6 @@ Forms:
           label: Instance image
           description: >-
             Select an image. It must be Ubuntu-based.
-        - name: connectionIP
-          type: string
-          regexpValidator: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
-          errorMessages:
-            invalid: Enter valid IP address.
-          label: IP to connect from
-          description: >-
-            Set a private IP address to whitelist to control access to the DB.
         - name: volSize
           type: integer
           label: Volume size
@@ -73,13 +45,20 @@ Forms:
           minValue: 1
           maxValue: 1024
           description: >-
-            Size of the volume (in GB) to be created for MySQL.
+            Size of the volume (in GB) to be created for Apache.
         - name: keyPair
           type: keypair
           label: Key Pair
           description: >-
             Select the Key Pair to access the instances. You can login to
             instances using this Key Pair after the deployment of application.
+          required: false
+        - name: assignFloatingIP
+          type: boolean
+          label: Assign Floating IP
+          description: >-
+            Set to true to assign a floating IP automatically.
+          initial: false
           required: false
         - name: unitNamingPattern
           type: string
@@ -93,38 +72,3 @@ Forms:
           description: >-
             Specify a string that will be used in instance hostname.
             Only A-Z, a-z, 0-9, dash, and underline are allowed.
-  - backupConfiguration:
-      fields:
-        - name: title
-          type: string
-          required: false
-          hidden: true
-          descriptionTitle: Backup Configuration
-        - name: doBackups
-          type: boolean
-          label: Check to enable backups
-          description: >-
-            Set to true to enable backups to object storage (every 10 days and every 3 months).
-          initial: true
-          required: false
-        - name: tenant
-          type: string
-          required: false
-          label: Openstack Tenant
-          descriptionTitle: Tenant
-          description: >-
-            Please provide your OpenStack tenant to access the object storage service.
-        - name: userID
-          type: string
-          required: false
-          label: Openstack User ID
-          descriptionTitle: UserID
-          description: >-
-            Please provide your OpenStack userid to access the object storage service.
-        - name: password
-          type: string
-          required: false
-          label: Openstack password
-          descriptionTitle: Password
-          description: >-
-            Please provide your OpenStack password to access the object storage service.
