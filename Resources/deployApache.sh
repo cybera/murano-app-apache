@@ -16,6 +16,7 @@ sudo service apache2 stop
 sudo rsync -av /var/www/html /opt/apache_data
 sudo sed -i -e "s|var/www|opt/apache_data|g" /etc/apache2/sites-enabled/000-default.conf
 sudo sed -i -e "s|var/www|opt/apache_data|g" /etc/apache2/sites-available/default-ssl.conf
+sudo sed -i -e "s|var/www|opt/apache_data|g" /etc/apache2/apache2.conf
 
 sudo service apache2 restart
 
