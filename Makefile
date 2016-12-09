@@ -5,4 +5,4 @@ zip:
 	zip -r ca.cybera.Apache.zip *
 
 upload:
-	murano package-import --exists-action u ca.cybera.Apache.zip
+	murano package-import --is-public --exists-action u ca.cybera.Apache.zip

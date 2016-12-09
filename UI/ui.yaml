@@ -3,7 +3,7 @@ Version: 2
 Application:
   ?:
     type: ca.cybera.Apache
-  volSize: $.instanceConfiguration.volSize
+  name: $.appConfiguration.name
   instance:
     ?:
       type: io.murano.resources.LinuxMuranoInstance
@@ -11,9 +11,53 @@ Application:
     flavor: $.instanceConfiguration.flavor
     image: $.instanceConfiguration.osImage
     keyname: $.instanceConfiguration.keyPair
-    assignFloatingIp: $.instanceConfiguration.assignFloatingIP
+    assignFloatingIp: $.appConfiguration.assignFloatingIP
+  volume:
+    ?:
+      type: io.murano.resources.CinderVolume
+    name: 'MuranoVolume-Apache'
+    size: $.volumeConfiguration.volumeSize
 
 Forms:
+  - appConfiguration:
+      fields:
+        - name: license
+          type: string
+          description: Apache License, Version 2.0
+          hidden: true
+          required: false
+        - name: name
+          type: string
+          label: Application Name
+          initial: Apache
+          description: >-
+            Enter a desired name for the application. Just A-Z, a-z, 0-9, dash and
+            underline are allowed
+        - name: assignFloatingIP
+          type: boolean
+          label: Assign Floating IP
+          description: >-
+             Select to true to assign floating IP automatically
+          initial: false
+          required: false
+          widgetMedia:
+            css: {all: ['muranodashboard/css/checkbox.css']}
+  - volumeConfiguration:
+      fields:
+        - name: title
+          type: string
+          required: false
+          hidden: true
+          description: >-
+            A volume will be created to host the Apache websites.
+        - name: volumeSize
+          type: integer
+          label: Volume size
+          required: true
+          minValue: 1
+          maxValue: 1024
+          description: >-
+            Size of the volume (in GB) to be created for Apache.
   - instanceConfiguration:
       fields:
         - name: title
@@ -38,27 +82,12 @@ Forms:
           label: Instance image
           description: >-
             Select an image. It must be Ubuntu-based.
-        - name: volSize
-          type: integer
-          label: Volume size
-          required: true
-          minValue: 1
-          maxValue: 1024
-          description: >-
-            Size of the volume (in GB) to be created for Apache.
         - name: keyPair
           type: keypair
           label: Key Pair
           description: >-
             Select the Key Pair to access the instances. You can login to
             instances using this Key Pair after the deployment of application.
-          required: false
-        - name: assignFloatingIP
-          type: boolean
-          label: Assign Floating IP
-          description: >-
-            Set to true to assign a floating IP automatically.
-          initial: false
           required: false
         - name: unitNamingPattern
           type: string
