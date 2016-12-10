@@ -12,6 +12,7 @@ Application:
     image: $.instanceConfiguration.osImage
     keyname: $.instanceConfiguration.keyPair
     assignFloatingIp: $.appConfiguration.assignFloatingIP
+    securityGroupName: 'MuranoSecurityGroup-Apache'
   volume:
     ?:
       type: io.murano.resources.CinderVolume
