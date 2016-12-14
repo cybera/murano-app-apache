@@ -13,11 +13,12 @@ Application:
     keyname: $.instanceConfiguration.keyPair
     assignFloatingIp: $.appConfiguration.assignFloatingIP
     securityGroupName: 'MuranoSecurityGroup-Apache'
-  volume:
-    ?:
-      type: io.murano.resources.CinderVolume
-    name: 'MuranoVolume-Apache'
-    size: $.volumeConfiguration.volumeSize
+    volumes:
+      '/dev/vdd':
+        ?:
+          type: io.murano.resources.CinderVolume
+        name: 'MuranoVolume-Apache'
+        size: $.volumeConfiguration.volumeSize
 
 Forms:
   - appConfiguration:

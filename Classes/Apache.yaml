@@ -15,9 +15,6 @@ Properties:
   instance:
     Contract: $.class(res:LinuxMuranoInstance).notNull()
 
-  volume:
-    Contract: $.class(res:CinderVolume).notNull()
-
 Methods:
   initialize:
     Body:
@@ -44,20 +41,10 @@ Methods:
           - $._environment.reporter.report($this, 'Creating instance for Apache')
           - $.instance.deploy()
 
-          # Create volume
-          - $._environment.reporter.report($this, 'Creating a new volume')
-          - $.volume.deploy()
-
-          # Attach the volume to the instance
-          - $._environment.reporter.report($this, 'Attaching the volume to the instance')
-          - $attachment: $.volume.attachTo($.instance)
-          - $._environment.stack.updateTemplate($attachment.template)
-          - $._environment.stack.push()
-
           # Deploy Apache
           - $._environment.reporter.report($this, 'Deploying Apache')
           - $file: sys:Resources.string('deployApache.sh')
-          - conf:Linux.runCommand($.instance.agent, $file)
+          #- conf:Linux.runCommand($.instance.agent, $file)
           - $._environment.reporter.report($this, 'Apache is installed.')
 
           # Assign Floating IP
