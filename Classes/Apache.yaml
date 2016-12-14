@@ -44,7 +44,7 @@ Methods:
           # Deploy Apache
           - $._environment.reporter.report($this, 'Deploying Apache')
           - $file: sys:Resources.string('deployApache.sh')
-          #- conf:Linux.runCommand($.instance.agent, $file)
+          - conf:Linux.runCommand($.instance.agent, $file)
           - $._environment.reporter.report($this, 'Apache is installed.')
 
           # Assign Floating IP
