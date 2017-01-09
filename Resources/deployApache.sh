@@ -26,7 +26,7 @@ else #CentOS
   yum -y install httpd mod_ssl
   rsync -av /var/www/html /opt/apache_data
   sed -i -e "s|var/www|opt/apache_data|g" /etc/httpd/conf/httpd.conf
+  /sbin/chkconfig httpd on
   service httpd restart
-
 fi
 
