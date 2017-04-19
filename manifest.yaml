@@ -4,6 +4,7 @@ FullName: ca.cybera.apache
 Name: Apache
 Description: |
   The Apache HTTP Server, colloquially called Apache, is a Web server application notable for playing a key role in the initial growth of the World Wide Web. Originally based on the NCSA HTTPd server, development of Apache began in early 1995 after work on the NCSA code stalled. Apache quickly overtook NCSA HTTPd as the dominant HTTP server, and has remained the most popular HTTP server in use since April 1996. This application stores Apache content on a volume.Supported image types: Ubuntu 14.04, CentOS 7.
+  Le serveur Apache HTTP (Apache) est une application de type « serveur web » connue pour avoir joué un rôle primordial dans l'expansion de la toile mondiale. S'inspirant au départ du serveur HTTPd de la NCSA, son développement a commencé tôt en 1995, après que les travaux sur le code de la NCSA ont été interrompus. Apache a vite supplanté le serveur HTTPd pour devenir le principal serveur HTTP et a gardé sa popularité jusqu'en avril 1996. Cette application stocke le contenu d'Apache dans un volume. Types d'image acceptés : Ubuntu 14.04, CentOS 7.
 Author: 'Cybera Inc'
 Tags: [HTTP, Server, WebServer, HTML, Apache]
 Classes:
