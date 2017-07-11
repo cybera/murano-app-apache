@@ -47,6 +47,9 @@ Methods:
           - conf:Linux.runCommand($.instance.agent, $file)
           - $._environment.reporter.report($this, 'Apache is installed.')
 
+          - $file: sys:Resources.string('sleep.sh')
+          - conf:Linux.runCommand($.instance.agent, $file)
+
           # Assign Floating IP
           - If: $.instance.assignFloatingIp
             Then:
